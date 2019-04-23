@@ -8,16 +8,21 @@ from selenium.webdriver.support import expected_conditions as EC
 from datetime import datetime
 import os
 from random import randint
+from selenium.webdriver.firefox.options import Options
+
+options = Options()
+options.headless = True
 
 #os.environ['DISPLAY'] = ':1'
-#time.sleep(120)
+time.sleep(120)
 
 profile = webdriver.FirefoxProfile()
 profile.set_preference("permissions.default.image", 2) #2 - Block all images
-driver = webdriver.Firefox(firefox_profile=profile)
+driver = webdriver.Firefox(firefox_profile=profile,options=options)
 wait = WebDriverWait(driver, 10)
 driver.get("https://www.youtube.com/playlist?list=LLiH1yoyPXZM7H-XhOf_HwJQ")
 element = wait.until(EC.presence_of_element_located((By.CSS_SELECTOR, 'a.yt-simple-endpoint.ytd-playlist-video-renderer')))
+#for i in range(1,1):
 for i in range(1, 50):
     driver.execute_script("window.scrollTo(0, 1000000000);") #il y a un bug dans firefox qui empeche d'utiliser le scroll to bottom
     time.sleep(2)
@@ -58,7 +63,7 @@ def PageScraper(urls):
         element = wait.until(EC.presence_of_element_located((By.CLASS_NAME,'ytp-play-button')))
         element.click() #met la video en pause
         driver.execute_script("window.scrollTo(0, 200);") #descend pour activer le chargement des commentaires
-    
+
         #trouve le nombre total de commentaires
         #no = wait.until(EC.presence_of_element_located((By.CSS_SELECTOR,'yt-formatted-string.count-text.style-scope.ytd-comments-header-renderer'))).text #extrait la string decrivant le nombre de commentaires total
         time.sleep(10);
@@ -72,9 +77,9 @@ def PageScraper(urls):
                 if no[i] != ',':
                     nbcom = nbcom + no[i]
                 i = i + 1
-                
+
             number = int(math.ceil(float(nbcom)/20)) #convertit la string en nombre (il y a 20 commentaires visibles par loading)
-        
+
             if number > 0: #s'il y a des commentaires
                 #loade tous les commentaires
                 lastscrollposition = 0
@@ -91,7 +96,6 @@ def PageScraper(urls):
                 userdata = driver.find_elements_by_id('author-text')
                 commentsdata = driver.find_elements_by_id('content-text')
                 size_of_users = len(userdata)
-            
                 filename = '/home/fred/Documents/python/ytcomments/' + datetime.now().strftime("%d-%m-%Y") + '.xml'
                 f = open(filename,'a')
                 data = "<video><url>"+current_url+"</url>\n"
@@ -101,11 +105,11 @@ def PageScraper(urls):
                     comment = commentsdata[i].text
                     if name and userurl and comment:
                         data = data + "<name>"+name+"</name>"+"<userurl>"+userurl+"</userurl>"+"<comment>"+comment+"</comment>\n"
-        
-                data = data.encode('utf-8') + "</video>\n"
+                data = data + "</video>\n"
+                #data = data.encode('utf-8')
                 f.write(data)
                 f.close()
-    
+
         elements = driver.find_elements_by_css_selector("a.yt-simple-endpoint.style-scope.ytd-compact-video-renderer")
         urls = []
         for element in elements:
@@ -113,10 +117,12 @@ def PageScraper(urls):
 
     except:
         urls = last_urls
-        
+
     return urls
 
 #for i in range (0, 1):
+#    next_url = PageScraper(current_url)
+#    print(next_url)
 try:
     while 1:
         next_url = PageScraper(current_url)
@@ -127,6 +133,8 @@ try:
         #    current_url = ['https://www.youtube.com/watch?v=3Dt9xJGPQBk']
             #print "Le crawler est reparti!"
             os.system('sudo systemctl reboot')
+            #exit()
     
 except:
     os.system('sudo systemctl reboot')
+    #exit()
