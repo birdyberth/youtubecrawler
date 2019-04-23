@@ -1,0 +1,8 @@
+$pip install selenium
+download geckodriver (https://github.com/mozilla/geckodriver/releases)
+untar
+$cp geckodriver /home/(username)/bin/geckodriver
+rajouter le dossier bin au path :
+$sudo nano /etc/environment/
+add /home/(username)/bin to path line
+$. /etc/environment #to load change
