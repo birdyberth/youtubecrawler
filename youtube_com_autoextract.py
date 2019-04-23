@@ -9,8 +9,8 @@ from datetime import datetime
 import os
 from random import randint
 
-os.environ['DISPLAY'] = ':1'
-time.sleep(120)
+#os.environ['DISPLAY'] = ':1'
+#time.sleep(120)
 
 profile = webdriver.FirefoxProfile()
 profile.set_preference("permissions.default.image", 2) #2 - Block all images
@@ -125,7 +125,7 @@ try:
             driver.close()
         #    driver = webdriver.Firefox()
         #    current_url = ['https://www.youtube.com/watch?v=3Dt9xJGPQBk']
-            print "Le crawler est reparti!"
+            #print "Le crawler est reparti!"
             os.system('sudo systemctl reboot')
     
 except:

@@ -6,3 +6,5 @@ rajouter le dossier bin au path :
 $sudo nano /etc/environment/
 add /home/(username)/bin to path line
 $. /etc/environment #to load change
+
+versions : geckodriver 24.0, firefox 66, python 3.6
