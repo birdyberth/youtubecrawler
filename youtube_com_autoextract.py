@@ -31,8 +31,11 @@ longurls = []
 for element in elements:
     longurls.append(element.get_attribute("href"))
 
-f = open('/home/fred/Documents/python/ytcomments/checklist.txt', 'a+')
+#f = open('ytcomments/checklist.txt', 'r')
+f = open('/home/fred/Documents/python/ytcomments/checklist.txt', 'r')
 data = f.readlines()
+f.close()
+
 j = 0
 notok = 1
 while notok:
@@ -48,6 +51,8 @@ while notok:
 
 u = longurls[j]
 current_url = u[0:43]
+#f = open('ytcomments/checklist.txt', 'a+')
+f = open('/home/fred/Documents/python/ytcomments/checklist.txt', 'a+')
 f.write(current_url+"\n")
 f.close()
 current_url = [current_url]
